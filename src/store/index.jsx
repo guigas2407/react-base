@@ -1,6 +1,7 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from './modules/sagas';
 
-// Slice do contador
 const counterSlice = createSlice({
   name: 'counter',
   initialState: { count: 0 },
@@ -14,25 +15,39 @@ const counterSlice = createSlice({
   },
 });
 
-// Slice do botão clicado (boolean)
 const botaoClicado = createSlice({
   name: 'clicker',
   initialState: false,
   reducers: {
-    onClicker: (state) => !state, // alterna true/false
+    onClicker: (state) => !state,
+    success: (state) => {
+      console.log('Tudo certo');
+      return !state;
+    },
+    failure: (state) => {
+      console.log('Deu Erro');
+      return !state;
+    },
+    request: (state) => {
+      console.log('Estou fazendo a requisição');
+      return !state;
+    },
   },
 });
 
-// Exportando actions
 export const { increment, decrement } = counterSlice.actions;
-export const { onClicker } = botaoClicado.actions;
+export const { onClicker, success, failure, request } = botaoClicado.actions;
 
-// Criando a store
+const sagaMiddleware = createSagaMiddleware();
+
 const store = configureStore({
   reducer: {
     counter: counterSlice.reducer,
     clicker: botaoClicado.reducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
 });
+
+sagaMiddleware.run(rootSaga);
 
 export default store;

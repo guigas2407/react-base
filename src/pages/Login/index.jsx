@@ -1,7 +1,7 @@
 import { Title, Paragrafo } from './styled';
 import { Container } from '../../styles/GlobalStyles';
 import { useDispatch } from 'react-redux';
-import { onClicker } from '../../store';
+import * as actions from '../../store';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -9,7 +9,7 @@ export default function Login() {
   function handleClick(e) {
     e.preventDefault();
 
-    dispatch(onClicker());
+    dispatch(actions.request());
   }
 
   return (
